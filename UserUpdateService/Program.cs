@@ -1,3 +1,4 @@
+using Serilog;
 using UserUpdateService;
 
 
@@ -5,8 +6,14 @@ using UserUpdateService;
 IHost host = Host.CreateDefaultBuilder(args)
     .ConfigureServices(services =>
     {
-        services.AddHostedService<Worker>();
-    })
+        //services.AddHostedService<Worker>();
+        services.AddHostedService<UserService>();
+    }).UseSerilog()
     .Build();
+
+Log.Logger = new LoggerConfiguration()
+            .WriteTo.Console()
+            .WriteTo.File(@"D:\.NET logs\userServiceLogs\logs.txt", rollingInterval: RollingInterval.Day)
+            .CreateLogger();
 
 host.Run();
